@@ -1,0 +1,101 @@
+version: '3'
+
+services:
+  mysql:
+    build: mysql
+    container_name: mysql
+    ports:
+      - 127.0.0.1:3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "134134135"
+      MYSQL_DATABASE: "1413"
+      MYSQL_USER: green
+      MYSQL_PASSWORD: 134134
+      TZ: "Europe/Kiev"
+    volumes:
+      - ../mysql_data:/var/lib/mysql
+    restart: always
+
+  php-apache:
+    build: php-apache
+    container_name: php-apache
+    ports:
+      - 8001:80
+    volumes:
+      - ./www:/var/www/html
+
+    links:
+      - mysql
+    restart: always
+
+
+#  phpmyadmin:
+#    image: gmdev.acceptic.com:5000/phpmyadmin
+#    container_name: phpmyadmin
+#    environment:
+#      MYSQL_ROOT_PASSWORD: "4134"
+#    restart: always
+#    ports:
+#     - 8080:80
+#    volumes:
+#     - /sessions
+#    links:
+#    - mysql:db
+
+#  redis:
+#    image: redis
+#    container_name: redis
+#    ports:
+#        - 127.0.0.1:6379:6379
+#    restart: always
+#    volumes:
+#      - /storage/redis_data:/data
+
+#  redis_proxy:
+#    depends_on:
+#      - redis
+#    container_name: redis-proxy
+#    image: redsmin/proxy
+#    environment:
+#      REDSMIN_KEY: "11"
+#      REDIS_URI: "redis://redis:6379"
+#    restart: always
+#    links:
+#      - redis
+
+#  php54:
+#    depends_on:
+#      - mysql
+#      - redis
+#    image: gmdev.acceptic.com:5000/php54_curl_live
+#    container_name: php54-compose
+#    ports:
+#      - 127.0.0.1:9000:80
+#    dns:
+#      - 8.8.8.8
+#    volumes:
+#      - /var/www:/var/www
+#      - /var/www/httpd-logs:/var/log/apache2
+#      - /var/www/tmp/5_4:/etc/apache2/sites-enabled
+#    links:
+#      - mysql
+#      - redis
+#    restart: always
+#
+#  php7:
+#    depends_on:
+#      - mysql
+#      - redis
+#    image: gmdev.acceptic.com:5000/php7-phalcon
+#    container_name: php7-compose
+#    ports:
+#      - 127.0.0.1:9010:80
+#    dns:
+#      - 8.8.8.8
+#    volumes:
+#      - /var/www:/var/www
+#      - /var/www/httpd-logs:/var/log/apache2
+#      - /var/www/tmp/7_0:/etc/apache2/sites-enabled
+#    links:
+#      - mysql
+#    restart: always
